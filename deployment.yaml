@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: idcs-workshop-deployment
+  labels:
+    app: idcs-workshop
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: idcs-workshop
+  template:
+    metadata:
+      labels:
+        app: idcs-workshop
+    spec: 
+      containers:
+      - name: idcs-workshop
+        imagePullPolicy: Always
+        image: iad.ocir.io/orasenatdpltdevopsnetw01/idcs-workshop:latest
+      imagePullSecrets:
+      - name: ocirsecret
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: idcs-workshop-service
+spec:
+  selector:
+    app: idcs-workshop
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    port: 8000
+    targetPort: 8000
